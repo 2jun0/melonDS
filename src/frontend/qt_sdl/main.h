@@ -83,6 +83,8 @@ signals:
 
     void swapScreensToggle();
 
+    void saveStateToggle(int slot);
+
 private:
     volatile int EmuStatus;
     int PrevEmuStatus;
@@ -266,6 +268,7 @@ private slots:
     void onChangeAudioSync(bool checked);
 
     void onTitleUpdate(QString title);
+    void onSaveStateToggled(int slot);
 
     void onEmuStart();
     void onEmuStop();

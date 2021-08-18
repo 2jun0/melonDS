@@ -39,7 +39,6 @@ AudioSettingsDialog::AudioSettingsDialog(QWidget* parent) : QDialog(parent), ui(
     setAttribute(Qt::WA_DeleteOnClose);
 
     oldInterp = Config::AudioInterp;
-    oldBitrate = Config::AudioBitrate;
     oldVolume = Config::AudioVolume;
 
     ui->cbInterpolation->addItem("None");
@@ -47,11 +46,6 @@ AudioSettingsDialog::AudioSettingsDialog(QWidget* parent) : QDialog(parent), ui(
     ui->cbInterpolation->addItem("Cosine");
     ui->cbInterpolation->addItem("Cubic");
     ui->cbInterpolation->setCurrentIndex(Config::AudioInterp);
-
-    ui->cbBitrate->addItem("Automatic");
-    ui->cbBitrate->addItem("10-bit");
-    ui->cbBitrate->addItem("16-bit");
-    ui->cbBitrate->setCurrentIndex(Config::AudioBitrate);
 
     ui->slVolume->setValue(Config::AudioVolume);
 
@@ -87,20 +81,9 @@ void AudioSettingsDialog::on_AudioSettingsDialog_accepted()
 void AudioSettingsDialog::on_AudioSettingsDialog_rejected()
 {
     Config::AudioInterp = oldInterp;
-    Config::AudioBitrate = oldBitrate;
     Config::AudioVolume = oldVolume;
 
     closeDlg();
-}
-
-void AudioSettingsDialog::on_cbBitrate_currentIndexChanged(int idx)
-{
-    // prevent a spurious change
-    if (ui->cbBitrate->count() < 3) return;
-
-    Config::AudioBitrate = ui->cbBitrate->currentIndex();
-
-    emit updateAudioSettings();
 }
 
 void AudioSettingsDialog::on_cbInterpolation_currentIndexChanged(int idx)

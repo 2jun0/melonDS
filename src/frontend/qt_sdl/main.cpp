@@ -327,6 +327,7 @@ EmuThread::EmuThread(QObject* parent) : QThread(parent)
     connect(this, SIGNAL(screenLayoutChange()), mainWindow->panel, SLOT(onScreenLayoutChanged()));
     connect(this, SIGNAL(windowFullscreenToggle()), mainWindow, SLOT(onFullscreenToggled()));
     connect(this, SIGNAL(swapScreensToggle()), mainWindow->actScreenSwap, SLOT(trigger()));
+    connect(this, SIGNAL(saveStateToggle(int)), mainWindow, SLOT(onSaveStateToggled(int)));
 
     if (mainWindow->hasOGL) initOpenGL();
 }
@@ -448,6 +449,15 @@ void EmuThread::run()
                 OSD::AddMessage(0, msg);
             }
         }
+
+        if (Input::HotkeyPressed(HK_SaveF1)) emit saveStateToggle(1);
+        if (Input::HotkeyPressed(HK_SaveF2)) emit saveStateToggle(2);
+        if (Input::HotkeyPressed(HK_SaveF3)) emit saveStateToggle(3);
+        if (Input::HotkeyPressed(HK_SaveF4)) emit saveStateToggle(4);
+        if (Input::HotkeyPressed(HK_SaveF5)) emit saveStateToggle(5);
+        if (Input::HotkeyPressed(HK_SaveF6)) emit saveStateToggle(6);
+        if (Input::HotkeyPressed(HK_SaveF7)) emit saveStateToggle(7);
+        if (Input::HotkeyPressed(HK_SaveF8)) emit saveStateToggle(8);
 
         if (EmuRunning == 1 || EmuRunning == 3)
         {
@@ -2436,11 +2446,6 @@ void MainWindow::onOpenAudioSettings()
 void MainWindow::onUpdateAudioSettings()
 {
     SPU::SetInterpolation(Config::AudioInterp);
-
-    if (Config::AudioBitrate == 0)
-        SPU::SetDegrade10Bit(NDS::ConsoleType == 0);
-    else
-        SPU::SetDegrade10Bit(Config::AudioBitrate == 1);
 }
 
 void MainWindow::onAudioSettingsFinished(int res)
@@ -2614,6 +2619,11 @@ void MainWindow::onTitleUpdate(QString title)
     setWindowTitle(title);
 }
 
+void MainWindow::onSaveStateToggled(int slot)
+{
+    actSaveState[slot]->trigger();
+}
+
 void MainWindow::onFullscreenToggled()
 {
     if (!mainWindow->isFullScreen())
@@ -2712,7 +2722,6 @@ void MainWindow::onUpdateVideoSettings(bool glchange)
     if (glchange)
         emuThread->emuUnpause();
 }
-
 
 void emuStop()
 {

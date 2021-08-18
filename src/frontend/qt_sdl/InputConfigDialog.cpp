@@ -45,7 +45,7 @@ const int hk_addons[] =
 const char* hk_addons_labels[] =
 {
     "[Boktai] Sunlight + ",
-    "[Boktai] Sunlight - ",
+    "[Boktai] Sunlight - "
 };
 
 const int hk_general[] =
@@ -74,6 +74,29 @@ const char* hk_general_labels[] =
     "Swap screens"
 };
 
+const int hk_saves[] = 
+{
+    HK_SaveF1,
+    HK_SaveF2,
+    HK_SaveF3,
+    HK_SaveF4,
+    HK_SaveF5,
+    HK_SaveF6,
+    HK_SaveF7,
+    HK_SaveF8,
+};
+
+const char* hk_saves_labels[] = 
+{
+    "saveF1",
+    "saveF2",
+    "saveF3",
+    "saveF4",
+    "saveF5",
+    "saveF6",
+    "saveF7",
+    "saveF8",
+};
 
 InputConfigDialog::InputConfigDialog(QWidget* parent) : QDialog(parent), ui(new Ui::InputConfigDialog)
 {
@@ -98,9 +121,16 @@ InputConfigDialog::InputConfigDialog(QWidget* parent) : QDialog(parent), ui(new 
         hkGeneralJoyMap[i] = Config::HKJoyMapping[hk_general[i]];
     }
 
+    for (int i = 0; i < 8; i++)
+    {
+        hkSavesKeyMap[i] = Config::HKKeyMapping[hk_saves[i]];
+        hkSavesJoyMap[i] = Config::HKJoyMapping[hk_saves[i]];
+    }
+
     populatePage(ui->tabInput, 12, dskeylabels, keypadKeyMap, keypadJoyMap);
     populatePage(ui->tabAddons, 2, hk_addons_labels, addonsKeyMap, addonsJoyMap);
     populatePage(ui->tabHotkeysGeneral, 9, hk_general_labels, hkGeneralKeyMap, hkGeneralJoyMap);
+    populatePage(ui->tabHotSaves, 8, hk_saves_labels, hkSavesKeyMap, hkSavesJoyMap);
 
     int njoy = SDL_NumJoysticks();
     if (njoy > 0)
@@ -187,6 +217,12 @@ void InputConfigDialog::on_InputConfigDialog_accepted()
     {
         Config::HKKeyMapping[hk_general[i]] = hkGeneralKeyMap[i];
         Config::HKJoyMapping[hk_general[i]] = hkGeneralJoyMap[i];
+    }
+
+    for (int i = 0; i < 8; i++)
+    {
+        Config::HKKeyMapping[hk_saves[i]] = hkSavesKeyMap[i];
+        Config::HKJoyMapping[hk_saves[i]] = hkSavesJoyMap[i];
     }
 
     Config::JoystickID = Input::JoystickID;

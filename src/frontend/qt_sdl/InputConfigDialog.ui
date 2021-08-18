@@ -37,6 +37,11 @@
        <string>General hotkeys</string>
       </attribute>
      </widget>
+     <widget class="QWidget" name="tabHotSaves">
+      <attribute name="title">
+       <string>Hot saves</string>
+      </attribute>
+     </widget>
     </widget>
    </item>
    <item>
